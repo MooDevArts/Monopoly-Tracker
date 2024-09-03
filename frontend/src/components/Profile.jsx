@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import Form from './Form';
 import Logs from './Logs';
+import { useNavigate } from 'react-router-dom';
+import Graph from './Graph';
+import sound from '../sounds/snd_fragment_retrievewav-14728.mp3'
 
 const Profile = (props) => {
 
@@ -10,15 +13,36 @@ const Profile = (props) => {
   const [users, setUsers] = useState([]);
   const[pay, setPay] = useState(false);
   const socket = props.socket;
+  const navigate = useNavigate();
+  const [audio, setAudio] = useState(null);
+
+  //sound preparation
+  const prepareSound = async () => {
+    try {
+      const audioObject = new Audio(sound); 
+      setAudio(audioObject);
+    } catch (error) {
+      console.error('Error loading sound:', error);
+    }
+  };
+
+  //sound play
+  const playSound = () => {
+    if (audio) {
+      audio.play(); // Play the audio
+    } else {
+      console.warn('Audio is not prepared yet.');
+    }
+  };
 
   const fetchUser = async () => {
-    const response = await fetch(`http://192.168.0.5:8000/${name}`);
+    const response = await fetch(`http://192.168.0.188:8000/${name}`);
     const userData = await response.json();
     await setUser(userData);
   }
 
   async function fetchAllUsers(){
-    const response = await fetch('http://192.168.0.5:8000/', {
+    const response = await fetch('http://192.168.0.188:8000/', {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -35,14 +59,19 @@ const Profile = (props) => {
   useEffect(() => {
     fetchUser(); 
     fetchAllUsers();
+    prepareSound();
 
     socket.on('udateUser', () => {
       fetchUser();
-    })
+    });
 
     socket.on('newUser', () => {
       fetchAllUsers();
-    })
+    });
+
+    socket.on('reset', () => {
+      navigate('/');
+    });
   }, [])
   
 
@@ -56,8 +85,11 @@ const Profile = (props) => {
         <p className='text-center p-1 bg-green-200 rounded'>Earned: {user.recd.total}</p>
       </div>
       </div>}
-      <button onClick={showPaymentForm} className='bg-red-900 rounded p-2 text-white'>Pay</button>
-      {pay && <Form socket = {socket} users = {users} currUser = {user.name} fetchuser={fetchUser} showPaymentForm = {showPaymentForm} balance = {user.balance}/>}
+      <button onClick={showPaymentForm} className='bg-red-900 rounded p-2 text-white'>Payment Form</button>
+      {pay && <Form playSound ={playSound} socket = {socket} users = {users} currUser = {user.name} fetchuser={fetchUser} showPaymentForm = {showPaymentForm} balance = {user.balance}/>}
+      
+      {name !== "Bank" && <Graph name = {name} socket = {socket}/>}
+
       <Logs socket = {socket}/>
 
     </div>

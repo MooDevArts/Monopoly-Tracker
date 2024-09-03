@@ -10,7 +10,7 @@ function Entry(props) {
   const socket = props.socket;
 
   async function fetchAllUsers(){
-    const response = await fetch('http://192.168.0.5:8000/', {
+    const response = await fetch('http://192.168.0.188:8000/', {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -31,23 +31,32 @@ function Entry(props) {
   
 
   async function handleSubmit(e){
-    e.preventDefault();
-    try {
-    
-      console.log(name);
-    const response = await fetch ("http://192.168.0.5:8000/", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({"name": name}),
-    });
-    const data = await response.json();
-    console.log(data.name);
-    navigate(`/profile/${data.name}`);
 
-    } catch (error) {
-      console.log("frontend Post err", error);
+    e.preventDefault();
+
+    const regex = /^[a-zA-Z\s]+$/; // Regular expression for letters only
+    if (regex.test(name)) {
+
+      try {
+    
+        console.log(name);
+      const response = await fetch ("http://192.168.0.188:8000/", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"name": name}),
+      });
+      const data = await response.json();
+      console.log(data.name);
+      navigate(`/profile/${data.name}`);
+  
+      } catch (error) {
+        console.log("frontend Post err", error);
+      }
+      
+    }else{
+      alert("No Special Chars");
     }
     
   }

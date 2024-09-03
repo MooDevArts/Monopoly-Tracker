@@ -31,7 +31,8 @@ const userSchema = new mongoose.Schema(
             otherPlayers:{
                 type: Number
             }
-        }
+        },
+        pointData: [Number] 
 
     }
 )

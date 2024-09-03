@@ -12,11 +12,10 @@ const http = require('http');
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://192.168.0.5:5173",
+        origin: "http://192.168.0.188:5173",
         methods: ["GET", "POST"],
         credentials: true,
     }
-
 });
 
 app.use(cors());
@@ -34,6 +33,31 @@ mongoose
   .catch((error) => console.log("Failed to connect", error));
 
   //APIs
+
+  //reset
+  app.get('/reset', async (req, res) => {
+    const reset = await user.deleteMany();
+    const resetLogs = await logs.deleteMany();
+    const newUser = await user.create({
+      name: "Bank",
+      balance: 1000000,
+      spent: {
+        total: 0,
+        bank: 0,
+        otherPlayers: 0
+      },
+      recd: {
+        total: 0,
+        bank: 0,
+        otherPlayers: 0
+      },
+      pointData: [1000000]
+    });
+    io.emit("reset");
+    io.emit('newUser');
+    res.send(reset, resetLogs, newUser);
+  });
+
   //get all logs
   app.get('/logs', async (req, res) => {
     try {
@@ -43,11 +67,6 @@ mongoose
       console.error('Error fetching logs:', error);
       res.status(500).json({ error: 'Failed to fetch logs' });
   }
-  });
-
-  app.get('/hi', (req, res) => {
-    console.log("hi");
-    res.send("HI")
   });
 
   //get all users
@@ -72,7 +91,8 @@ app.post('/', async (req, res) => {
         total: 0,
         bank: 0,
         otherPlayers: 0
-      }
+      },
+      pointData: [1500]
     })
     res.send(newUser);
     io.emit('newUser');
@@ -88,16 +108,18 @@ app.get('/:name', async (req, res) => {
     res.send(response);
 });
 
+
+
 //pay / this user / from this user
 app.patch('/pay/:to/:from/:value', async (req, res) => {
 req.params.value = parseInt(req.params.value);
 
   //getting to
-const to = await fetch(`http://192.168.0.5:8000/${req.params.to}`);
+const to = await fetch(`http://192.168.0.188:8000/${req.params.to}`);
 const usableTo = await to.json();
 
   //getting from
-const from = await fetch(`http://192.168.0.5:8000/${req.params.from}`);
+const from = await fetch(`http://192.168.0.188:8000/${req.params.from}`);
 const usableFrom = await from.json();
 
   //add and subtract value
@@ -107,7 +129,10 @@ const usableFrom = await from.json();
       //from
         usableFrom.balance -= req.params.value;
         usableFrom.spent.total += req.params.value;
-
+      
+  //push values into pointdata for to, and from
+  usableTo.pointData.push(usableTo.balance);
+  usableFrom.pointData.push(usableFrom.balance);
 
   //patch to
   const updatedTo = await user.findByIdAndUpdate(usableTo._id, usableTo, {new:true});
@@ -127,4 +152,5 @@ const usableFrom = await from.json();
   io.emit('udateUser');
 
   res.send("done")
-}); 
+});
+

@@ -5,7 +5,7 @@ const Form = (props) => {
     const [value, setValue] = useState('');
     const [isFormValid, setIsFormValid] = useState(false);
     const socket = props.socket;
-    const filteredUsers = props.users.filter(user => user.name !== props.currUser);
+    const filteredUsers = props.users.filter(user => user.name !== props.currUser && user.balance > 0);
   
     const handleUserChange = (event) => {
       setSelectedUser(event.target.value);
@@ -24,7 +24,7 @@ const Form = (props) => {
     const handleSubmit = async (event) => {
       event.preventDefault();
       if(value > 0 && value <= props.balance){
-        const response  = await fetch(`http://192.168.0.5:8000/pay/${selectedUser}/${props.currUser}/${value}`, {
+        const response  = await fetch(`http://192.168.0.188:8000/pay/${selectedUser}/${props.currUser}/${value}`, {
           method: "PATCH",
           headers: {
             'Content-Type': 'application/json',
@@ -32,6 +32,7 @@ const Form = (props) => {
         })
         props.fetchuser();
         props.showPaymentForm();
+        props.playSound();
       }else{
         alert("Invalid Amount")
       }
@@ -72,7 +73,7 @@ const Form = (props) => {
             inputMode="numeric"
           />
         </div>
-        {isFormValid && <button disabled={!isFormValid} className='bg-red-900 p-2 rounded text-white w-full' type="submit">Submit</button>}
+        {isFormValid && <button disabled={!isFormValid} className='bg-red-900 p-2 rounded text-white w-full' type="submit">Pay {selectedUser} ₩ {value}</button>}
       </form>
     );
 }

@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Entry from './components/Entry'
 import Profile from './components/Profile'
 import List from './components/List'
+import Admin from './components/Admin'
 
 
 function App(props) {
@@ -19,6 +20,10 @@ function App(props) {
     {
       path: '/list',
       element: <List />
+    },
+    {
+      path: '/admin',
+      element: <Admin />
     }
   ])
 
