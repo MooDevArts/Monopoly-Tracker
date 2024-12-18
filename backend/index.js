@@ -25,7 +25,7 @@ app.use(express.json());
 mongoose
   .connect(process.env.URI)
   .then(() => {
-    console.log("Connected Successfully " + currIp.ip);
+    console.log("Connected Successfully " + currIp);
     server.listen(process.env.PORT || 5000, (err) => {
       if (err) console.log(err);
       console.log(`running at port ${process.env.PORT}`);
