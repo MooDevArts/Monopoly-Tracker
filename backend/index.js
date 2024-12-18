@@ -8,11 +8,12 @@ const logs = require('./logModel');
 const cors = require('cors');
 const Server = require('socket.io').Server;
 const http = require('http');
+const currIp = require('./../ip-address');
 
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://192.168.0.188:5173",
+        origin: `http://${currIp}:5173`,
         methods: ["GET", "POST"],
         credentials: true,
     }
@@ -24,7 +25,7 @@ app.use(express.json());
 mongoose
   .connect(process.env.URI)
   .then(() => {
-    console.log("Connected Successfully");
+    console.log("Connected Successfully " + currIp.ip);
     server.listen(process.env.PORT || 5000, (err) => {
       if (err) console.log(err);
       console.log(`running at port ${process.env.PORT}`);
@@ -115,11 +116,11 @@ app.patch('/pay/:to/:from/:value', async (req, res) => {
 req.params.value = parseInt(req.params.value);
 
   //getting to
-const to = await fetch(`http://192.168.0.188:8000/${req.params.to}`);
+const to = await fetch(`http://${currIp}:8000/${req.params.to}`);
 const usableTo = await to.json();
 
   //getting from
-const from = await fetch(`http://192.168.0.188:8000/${req.params.from}`);
+const from = await fetch(`http://${currIp}:8000/${req.params.from}`);
 const usableFrom = await from.json();
 
   //add and subtract value

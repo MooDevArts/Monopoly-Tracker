@@ -1,13 +1,14 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import GraphColor from './GraphColor'
+import {ip} from './../../../ip-front'
 
 const Admin = () => {
 
     const navigate = useNavigate();
 
     async function handleClick() {
-        const response = await fetch(`http://192.168.0.188:8000/reset`, {
+        const response = await fetch(`http://${ip}:8000/reset`, {
             method: "GET"
         })
         const result = await response.json();

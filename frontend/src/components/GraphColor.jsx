@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Line, PolarArea, Bar } from 'react-chartjs-2';
 import { Chart, registerables, Colors, scales } from 'chart.js';
+import {ip} from './../../../ip-front'
 
 const GraphColor = () => {
   const [users, setUsers] = useState([]);
 
   //user Data
   async function fetchAllUsers(){
-    const response = await fetch('http://192.168.0.188:8000/', {
+    const response = await fetch(`http://${ip}:8000/`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',

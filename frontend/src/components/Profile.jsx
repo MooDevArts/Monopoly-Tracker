@@ -5,6 +5,7 @@ import Logs from './Logs';
 import { useNavigate } from 'react-router-dom';
 import Graph from './Graph';
 import sound from '../sounds/snd_fragment_retrievewav-14728.mp3'
+import {ip} from './../../../ip-front'
 
 const Profile = (props) => {
 
@@ -36,13 +37,13 @@ const Profile = (props) => {
   };
 
   const fetchUser = async () => {
-    const response = await fetch(`http://192.168.0.188:8000/${name}`);
+    const response = await fetch(`http://${ip}:8000/${name}`);
     const userData = await response.json();
     await setUser(userData);
   }
 
   async function fetchAllUsers(){
-    const response = await fetch('http://192.168.0.188:8000/', {
+    const response = await fetch(`http://${ip}:8000/`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',

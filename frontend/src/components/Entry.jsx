@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {ip} from './../../../ip-front'
 
 function Entry(props) {
 
@@ -10,7 +11,7 @@ function Entry(props) {
   const socket = props.socket;
 
   async function fetchAllUsers(){
-    const response = await fetch('http://192.168.0.188:8000/', {
+    const response = await fetch(`http://${ip}:8000/`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -27,6 +28,8 @@ function Entry(props) {
     socket.on('newUser', () => {
       fetchAllUsers();
     })
+
+    console.log(ip)
   }, [])
   
 
@@ -40,7 +43,7 @@ function Entry(props) {
       try {
     
         console.log(name);
-      const response = await fetch ("http://192.168.0.188:8000/", {
+      const response = await fetch (`http://${ip}:8000/`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',

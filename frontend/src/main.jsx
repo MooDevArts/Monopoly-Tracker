@@ -3,7 +3,8 @@ import App from './App.jsx'
 import './index.css'
 import ReactDOM from 'react-dom/client'
 import io from 'socket.io-client'
-const socket = io('http://192.168.0.188:8000')
+import {ip} from './../../ip-front.js'
+const socket = io(`http://${ip}:8000`)
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(

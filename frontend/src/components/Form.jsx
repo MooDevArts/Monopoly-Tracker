@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import {ip} from './../../../ip-front'
 
 const Form = (props) => {
     const [selectedUser, setSelectedUser] = useState('');
@@ -24,7 +25,7 @@ const Form = (props) => {
     const handleSubmit = async (event) => {
       event.preventDefault();
       if(value > 0 && value <= props.balance){
-        const response  = await fetch(`http://192.168.0.188:8000/pay/${selectedUser}/${props.currUser}/${value}`, {
+        const response  = await fetch(`http://${ip}:8000/pay/${selectedUser}/${props.currUser}/${value}`, {
           method: "PATCH",
           headers: {
             'Content-Type': 'application/json',

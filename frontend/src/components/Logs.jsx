@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import {ip} from './../../../ip-front'
 
 const Logs = (props) => {
 
@@ -9,7 +10,7 @@ const Logs = (props) => {
     const [highlight, setHighlight] = useState(false);
 
     const fetchLogs = async () => {
-        const response = await fetch(`http://192.168.0.188:8000/logs`, {
+        const response = await fetch(`http://${ip}:8000/logs`, {
             method: "GET"
         });
         const allLogs = await response.json();
