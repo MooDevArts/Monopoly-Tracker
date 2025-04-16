@@ -37,3 +37,8 @@ This app was created to replace cash in the board game "Monopoly"
     - Once logged in, everybody can make payments to eachother
     - Stats can be seen at /admin
       - can also reset the whole state from here
+
+# Please Note
+
+This app is optimized for mobile, use on mobile phone, or on phone mode in inspect on a browser for the best experience.
+Thank you!
