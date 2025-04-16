@@ -21,5 +21,5 @@ Instructions:
 		- npm start
 
 	- in frontend folder:
-		- npm run dev -- --host 192.168.0.19
-		- Replace last numbers with current IP
+		- npm run dev -- --host 192.168.0.26
+		- Replace last numbers with current IP ( copied in step 1 )
